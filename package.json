@@ -1,0 +1,26 @@
+{
+  "name": "exercicio-testes-api-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests --reporter mochawesome --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DouglasAntoni0/exercicio-testes-api-graphql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DouglasAntoni0/exercicio-testes-api-graphql/issues"
+  },
+  "homepage": "https://github.com/DouglasAntoni0/exercicio-testes-api-graphql#readme",
+  "devDependencies": {
+    "mocha": "^11.7.4",
+    "mochawesome": "^7.1.4",
+    "pactum": "^3.8.0"
+  }
+}

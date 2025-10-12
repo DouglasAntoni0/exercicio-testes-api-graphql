@@ -1,0 +1,291 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 8,
+    "passes": 8,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-10-12T00:24:37.195Z",
+    "end": "2025-10-12T00:24:38.936Z",
+    "duration": 1741,
+    "testsRegistered": 8,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "a810650a-7dac-4ee9-ac63-537b651cc3a1",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "ced616bc-36b6-4de1-b089-2d1ed57886c5",
+          "title": "Serviço de Categorias - Fluxo Completo",
+          "fullFile": "C:\\Users\\dougl\\Downloads\\exercicio-testes-api-graphql\\exercicio-testes-api-graphql\\tests\\categories.test.js",
+          "file": "\\tests\\categories.test.js",
+          "beforeHooks": [
+            {
+              "title": "\"before all\" hook in \"Serviço de Categorias - Fluxo Completo\"",
+              "fullTitle": "Serviço de Categorias - Fluxo Completo \"before all\" hook in \"Serviço de Categorias - Fluxo Completo\"",
+              "timedOut": false,
+              "duration": 1364,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const loginMutation = `\n    mutation authUser($email: String!, $password: String!) {\n        authUser(email: $email, password: $password) {\n            token\n        }\n    }\n`;\nconsole.log(\"Realizando login com a mutation 'authUser'...\");\nconst response = await pactum.spec()\n    .post(an_api_url)\n    .withGraphQLQuery(loginMutation)\n    .withGraphQLVariables({\n        \"email\": \"aluno_ebac@qa.com\",\n        \"password\": \"teste@1235\"\n    })\n    .expectStatus(200)\n    .toss();\nauthToken = response.json.data.authUser.token;\nconsole.log(\"Login bem-sucedido!\");",
+              "err": {},
+              "uuid": "ebd5efd8-d883-4e6a-b23a-214200407faa",
+              "parentUUID": "ced616bc-36b6-4de1-b089-2d1ed57886c5",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Deve adicionar uma nova categoria",
+              "fullTitle": "Serviço de Categorias - Fluxo Completo Deve adicionar uma nova categoria",
+              "timedOut": false,
+              "duration": 22,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const createCategoryMutation = `\n    mutation addCategory($name: String!) {\n        addCategory(name: $name) {\n            name\n        }\n    }`;\n\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(createCategoryMutation)\n    .withGraphQLVariables({ \"name\": categoryName })\n    .expectStatus(200);",
+              "err": {},
+              "uuid": "a9d57604-27be-473d-8211-bcb0a7a70523",
+              "parentUUID": "ced616bc-36b6-4de1-b089-2d1ed57886c5",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve editar uma categoria",
+              "fullTitle": "Serviço de Categorias - Fluxo Completo Deve editar uma categoria",
+              "timedOut": false,
+              "duration": 21,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const updatedCategoryName = `Categoria Editada-${Date.now()}`;\nconst updateCategoryMutation = `\n    mutation editCategory($id: ID!, $name: String!) {\n        editCategory(id: $id, name: $name) {\n            name\n        }\n    }`;\n\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(updateCategoryMutation)\n    .withGraphQLVariables({ \"id\": categoryName, \"name\": updatedCategoryName })\n    .expectStatus(200);\n\ncategoryName = updatedCategoryName;",
+              "err": {},
+              "uuid": "cf52e2e8-9f61-4355-b241-5efe9f858af2",
+              "parentUUID": "ced616bc-36b6-4de1-b089-2d1ed57886c5",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve validar o contrato ao buscar todas as categorias",
+              "fullTitle": "Serviço de Categorias - Fluxo Completo Deve validar o contrato ao buscar todas as categorias",
+              "timedOut": false,
+              "duration": 111,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const getCategoriesQuery = `\n    query Categories {\n        Categories {\n            name\n            photo\n        }\n    }`;\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(getCategoriesQuery)\n    .expectStatus(200)\n    .expectJsonSchema({\n        type: 'object',\n        properties: {\n            data: {\n                properties: {\n                    Categories: {\n                        type: 'array',\n                        items: {\n                            type: 'object',\n                            properties: {\n                                name: { type: 'string' },\n                                photo: { type: ['string', 'null'] }\n                            },\n                            required: ['name', 'photo']\n                        }\n                    }\n                }\n            }\n        }\n    });",
+              "err": {},
+              "uuid": "c71e7d2a-4519-4cfc-8cee-fa9721d1343c",
+              "parentUUID": "ced616bc-36b6-4de1-b089-2d1ed57886c5",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve deletar a categoria",
+              "fullTitle": "Serviço de Categorias - Fluxo Completo Deve deletar a categoria",
+              "timedOut": false,
+              "duration": 22,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const deleteCategoryMutation = `\n    mutation deleteCategory($id: ID!) {\n        deleteCategory(id: $id){\n            name\n        }\n    }`;\n\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(deleteCategoryMutation)\n    .withGraphQLVariables({ \"id\": categoryName })\n    .expectStatus(200);",
+              "err": {},
+              "uuid": "59588ee5-ae27-4bda-a1af-47c6c397d590",
+              "parentUUID": "ced616bc-36b6-4de1-b089-2d1ed57886c5",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "a9d57604-27be-473d-8211-bcb0a7a70523",
+            "cf52e2e8-9f61-4355-b241-5efe9f858af2",
+            "c71e7d2a-4519-4cfc-8cee-fa9721d1343c",
+            "59588ee5-ae27-4bda-a1af-47c6c397d590"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 176,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "e7982a89-82ba-4eea-a9f6-7cd0a5e1a166",
+          "title": "Serviço de Produtos - Fluxo Completo",
+          "fullFile": "C:\\Users\\dougl\\Downloads\\exercicio-testes-api-graphql\\exercicio-testes-api-graphql\\tests\\products.test.js",
+          "file": "\\tests\\products.test.js",
+          "beforeHooks": [
+            {
+              "title": "\"before all\" hook in \"Serviço de Produtos - Fluxo Completo\"",
+              "fullTitle": "Serviço de Produtos - Fluxo Completo \"before all\" hook in \"Serviço de Produtos - Fluxo Completo\"",
+              "timedOut": false,
+              "duration": 48,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// PARTE 1: Login\nconst loginMutation = `\n    mutation authUser($email: String!, $password: String!) {\n        authUser(email: $email, password: $password) {\n            token\n        }\n    }\n`;\nconsole.log(\"Realizando login para os testes de produto...\");\nconst response = await pactum.spec()\n    .post(an_api_url)\n    .withGraphQLQuery(loginMutation)\n    .withGraphQLVariables({\n        \"email\": \"aluno_ebac@qa.com\",\n        \"password\": \"teste@1235\"\n    })\n    .expectStatus(200)\n    .toss();\nauthToken = response.json.data.authUser.token;\nconsole.log(\"Login bem-sucedido!\");\nconst createCategoryMutation = `\n    mutation addCategory($name: String!) {\n        addCategory(name: $name) { name }\n    }`;\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(createCategoryMutation)\n    .withGraphQLVariables({ \"name\": categoryNameForProduct })\n    .expectStatus(200);\nconsole.log(`Categoria de suporte '${categoryNameForProduct}' criada.`);",
+              "err": {},
+              "uuid": "9699fea0-792f-4693-9127-935d0e64e54f",
+              "parentUUID": "e7982a89-82ba-4eea-a9f6-7cd0a5e1a166",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Deve adicionar um novo produto",
+              "fullTitle": "Serviço de Produtos - Fluxo Completo Deve adicionar um novo produto",
+              "timedOut": false,
+              "duration": 27,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const addProductMutation = `\n    mutation addProduct($name: String!, $categories: [CategoryInput], $price: Float!) {\n        addProduct(name: $name, categories: $categories, price: $price) {\n            name\n            price\n        }\n    }`;\n\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(addProductMutation)\n    .withGraphQLVariables({\n        \"name\": productName,\n        \"price\": 150.50,\n        \"categories\": [\n            { \"name\": categoryNameForProduct }\n        ]\n    })\n    .expectStatus(200);",
+              "err": {},
+              "uuid": "2a57af63-9eab-40bc-83a6-928ee706826f",
+              "parentUUID": "e7982a89-82ba-4eea-a9f6-7cd0a5e1a166",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve editar um produto",
+              "fullTitle": "Serviço de Produtos - Fluxo Completo Deve editar um produto",
+              "timedOut": false,
+              "duration": 31,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const updatedProductName = `Produto Editado-${Date.now()}`;\nconst editProductMutation = `\n    mutation editProduct($id: ID!, $name: String!, $price: Float!) {\n        editProduct(id: $id, name: $name, price: $price) {\n            name\n            price\n        }\n    }\n`;\n\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(editProductMutation)\n    .withGraphQLVariables({\n        \"id\": productName, \n        \"name\": updatedProductName,\n        \"price\": 200.00\n    })\n    .expectStatus(200);\n\nproductName = updatedProductName;",
+              "err": {},
+              "uuid": "0bbe95ea-3f88-4e58-b74d-7a5c5f45b095",
+              "parentUUID": "e7982a89-82ba-4eea-a9f6-7cd0a5e1a166",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve validar o contrato ao buscar todos os produtos",
+              "fullTitle": "Serviço de Produtos - Fluxo Completo Deve validar o contrato ao buscar todos os produtos",
+              "timedOut": false,
+              "duration": 68,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const getProductsQuery = `\n    query Products {\n        Products {\n            name\n            price\n        }\n    }\n`;\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(getProductsQuery)\n    .expectStatus(200)\n    .expectJsonSchema({\n        type: 'object',\n        properties: {\n            data: {\n                properties: {\n                    Products: {\n                        type: 'array',\n                        items: {\n                            type: 'object',\n                            properties: {\n                                name: { type: ['string', 'null'] },\n                                price: { type: ['number', 'null'] }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    });",
+              "err": {},
+              "uuid": "86368bfd-966d-47de-9f12-80156585a37e",
+              "parentUUID": "e7982a89-82ba-4eea-a9f6-7cd0a5e1a166",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Deve deletar o produto",
+              "fullTitle": "Serviço de Produtos - Fluxo Completo Deve deletar o produto",
+              "timedOut": false,
+              "duration": 21,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const deleteProductMutation = `\n    mutation deleteProduct($id: ID!) {\n        deleteProduct(id: $id){\n            name\n        }\n    }\n`;\n\nawait pactum.spec()\n    .post(an_api_url)\n    .withHeaders('Authorization', `Bearer ${authToken}`)\n    .withGraphQLQuery(deleteProductMutation)\n    .withGraphQLVariables({ \"id\": productName })\n    .expectStatus(200);",
+              "err": {},
+              "uuid": "59360daa-76dd-48d7-a62c-e74d4858d7a2",
+              "parentUUID": "e7982a89-82ba-4eea-a9f6-7cd0a5e1a166",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "2a57af63-9eab-40bc-83a6-928ee706826f",
+            "0bbe95ea-3f88-4e58-b74d-7a5c5f45b095",
+            "86368bfd-966d-47de-9f12-80156585a37e",
+            "59360daa-76dd-48d7-a62c-e74d4858d7a2"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 147,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "11.7.4"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.3.0"
+    }
+  }
+}
