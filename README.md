@@ -137,6 +137,10 @@ Este repositório mostra uma abordagem madura para API testing: o teste não se 
 - Validar mensagens de erro GraphQL.
 - Publicar relatório como artifact.
 
+## Diferencial para portfólio
+
+O destaque deste repositório é mostrar domínio de uma API menos trivial que REST básico. GraphQL exige atenção a queries, mutations, variáveis, autenticação e contrato de resposta, o que fortalece a leitura técnica do perfil.
+
 ## Conclusão
 
 Este projeto é uma vitrine forte de testes de API porque demonstra fluxo completo, contrato, autenticação e evidência. Ele mostra domínio de uma camada essencial para QA moderno: validar serviço de forma rápida, precisa e independente da interface.
